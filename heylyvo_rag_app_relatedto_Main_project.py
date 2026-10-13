@@ -1,6 +1,5 @@
-# to run the code:  uv run streamlit run .\src\gen_ai\RAG_GenAIpart02\heylyvo_rag_app_relatedto_Main_project.py
 # ============================================================
-# Heylyvo — Chat With Your Books
+# AskMyBooks — Chat With Your Books
 # Built by Shahriar Shoaib
 # ============================================================
 # Flow: upload PDFs -> split into chunks -> embed -> store in Chroma
@@ -22,9 +21,7 @@ from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 
 # ---- Page settings (must be the first Streamlit command) ----
-st.set_page_config(page_title="Heylyvo", page_icon="📚", layout="centered")
-
-MAX_FILE_MB = 20   # biggest PDF allowed (per file)
+st.set_page_config(page_title="AskMyBooks", page_icon="📚", layout="centered")
 
 # ---- A little CSS to make the header pretty ----
 st.markdown("""
@@ -125,19 +122,11 @@ with st.sidebar:
     st.header("📚 Your Books")
 
     files = st.file_uploader(
-        f"Upload PDF books (max {MAX_FILE_MB} MB each)",
+        "Upload PDF books",
         type="pdf",
         accept_multiple_files=True,
         key=f"uploader_{st.session_state.uploader_key}",
     )
-
-    # Block any file bigger than the limit
-    if files:
-        limit_bytes = MAX_FILE_MB * 1024 * 1024
-        for f in files:
-            if f.size > limit_bytes:
-                st.error(f"❌ {f.name} is bigger than {MAX_FILE_MB} MB. Please remove it.")
-        files = [f for f in files if f.size <= limit_bytes]
 
     already_processed = st.session_state.vectorstore is not None
 
@@ -170,7 +159,7 @@ with st.sidebar:
 # ============================================================
 # Main page
 # ============================================================
-st.markdown('<p class="hero-title">Heylyvo</p>', unsafe_allow_html=True)
+st.markdown('<p class="hero-title">AskMyBooks</p>', unsafe_allow_html=True)
 st.markdown('<p class="hero-sub">Upload your books. Ask anything. Get answers from the pages.</p>',
             unsafe_allow_html=True)
 st.markdown('<p class="hero-by">Built by Shahriar Shoaib</p>', unsafe_allow_html=True)
@@ -225,4 +214,3 @@ else:
         st.session_state.chat.append(
             {"role": "assistant", "content": answer, "sources": sources}
         )
-
