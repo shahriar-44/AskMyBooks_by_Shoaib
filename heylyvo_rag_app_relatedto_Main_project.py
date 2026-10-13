@@ -20,6 +20,9 @@ from langchain_community.vectorstores import Chroma
 from langchain_groq import ChatGroq
 from langchain_core.prompts import ChatPromptTemplate
 
+# ---- Setting you can change: biggest PDF allowed, in MB ----
+MAX_MB = 20
+
 # ---- Page settings (must be the first Streamlit command) ----
 st.set_page_config(page_title="AskMyBooks", page_icon="📚", layout="centered")
 
@@ -124,6 +127,7 @@ with st.sidebar:
     files = st.file_uploader(
         "Upload PDF books",
         type="pdf",
+        help=f"Max {MAX_MB} MB per PDF",
         accept_multiple_files=True,
         key=f"uploader_{st.session_state.uploader_key}",
     )
@@ -133,17 +137,23 @@ with st.sidebar:
     if st.button("Process Books", type="primary",
                  disabled=(not files) or already_processed,
                  use_container_width=True):
-        with st.spinner("Reading your books... big books take a minute."):
-            try:
-                vs = build_knowledge_base(files)
-                if vs is None:
-                    st.error("Could not read text from these PDFs.")
-                else:
-                    st.session_state.vectorstore = vs
-                    st.session_state.books = [f.name for f in files]
-                    st.rerun()
-            except Exception as e:
-                st.error(f"Something went wrong: {e}")
+        # Size check: find any PDF bigger than the limit (f.size is in bytes)
+        too_big = [f.name for f in files if f.size > MAX_MB * 1024 * 1024]
+
+        if too_big:
+            st.error(f"Too big (max {MAX_MB} MB per PDF): " + ", ".join(too_big))
+        else:
+            with st.spinner("Reading your books... big books take a minute."):
+                try:
+                    vs = build_knowledge_base(files)
+                    if vs is None:
+                        st.error("Could not read text from these PDFs.")
+                    else:
+                        st.session_state.vectorstore = vs
+                        st.session_state.books = [f.name for f in files]
+                        st.rerun()
+                except Exception as e:
+                    st.error(f"Something went wrong: {e}")
 
     if st.session_state.books:
         st.success("Ready! Loaded:")
