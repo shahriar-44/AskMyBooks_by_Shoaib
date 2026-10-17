@@ -26,16 +26,189 @@ MAX_MB = 20
 # ---- Page settings (must be the first Streamlit command) ----
 st.set_page_config(page_title="AskMyBooks", page_icon="📚", layout="centered")
 
-# ---- A little CSS to make the header pretty ----
+# ---- Custom styling ----
 st.markdown("""
 <style>
-.hero-title {
-    font-size: 2.8rem; font-weight: 800; margin-bottom: 0;
-    background: linear-gradient(90deg, #7F5AF0, #2CB67D);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Poppins', sans-serif;
 }
-.hero-sub { font-size: 1.05rem; opacity: 0.8; margin-top: 0.2rem; }
-.hero-by  { font-size: 0.9rem; opacity: 0.6; margin-bottom: 1.2rem; }
+
+/* Dark gradient background */
+.stApp {
+    background: radial-gradient(circle at top, #1b1035 0%, #0b0b17 60%);
+}
+
+/* Hide default Streamlit chrome */
+#MainMenu, footer, header {visibility: hidden;}
+
+/* ---------- Header ---------- */
+.hero-title {
+    text-align: center;
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin-bottom: 0;
+    letter-spacing: 1px;
+}
+.hero-title .grad {
+    background: linear-gradient(90deg, #ff4ecd, #8b5cf6, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+    text-align: center;
+    font-size: 1.05rem;
+    color: #d6d6ee;
+    margin-top: 0.2rem;
+}
+.hero-by {
+    text-align: center;
+    font-size: 1rem;
+    color: #a5a5c0;
+    margin-top: 0.2rem;
+}
+.hero-by .name {
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: #fcd34d;
+    padding-left: 6px;
+}
+.hero-divider {
+    height: 2px;
+    margin: 14px auto 22px auto;
+    width: 60%;
+    background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+    border-radius: 2px;
+}
+
+/* ---------- Chat bubbles ---------- */
+[data-testid="stChatMessage"] {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(6px);
+}
+[data-testid="stChatMessage"] p,
+[data-testid="stChatMessage"] li,
+[data-testid="stChatMessage"] span,
+[data-testid="stChatMessage"] div,
+[data-testid="stChatMessage"] code {
+    color: #f5f5ff !important;
+    font-size: 1.05rem;
+    line-height: 1.65;
+}
+
+/* ---------- Chat input ---------- */
+[data-testid="stBottom"],
+[data-testid="stBottom"] > div,
+[data-testid="stBottomBlockContainer"] {
+    background: transparent !important;
+}
+[data-testid="stChatInput"] {
+    background: #1f1f3d !important;
+    border: 1px solid #6d4fd8 !important;
+    border-radius: 16px !important;
+}
+[data-testid="stChatInput"] > div,
+[data-testid="stChatInput"] div[data-baseweb="textarea"],
+[data-testid="stChatInput"] div[data-baseweb="base-input"] {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+[data-testid="stChatInput"] textarea {
+    background: transparent !important;
+    color: #ffffff !important;
+    border-radius: 0 !important;
+}
+[data-testid="stChatInput"] textarea::placeholder {
+    color: #b8b8d6 !important;
+}
+[data-testid="stChatInputSubmitButton"] {
+    background: #6d4fd8 !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+}
+[data-testid="stChatInputSubmitButton"] svg {
+    color: #ffffff !important;
+}
+
+/* ---------- Sidebar ---------- */
+[data-testid="stSidebar"] {
+    background: #14142b !important;
+    border-right: 1px solid #2d2d55;
+}
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3,
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] small {
+    color: #f5f5ff !important;
+}
+
+/* File uploader */
+[data-testid="stFileUploaderDropzone"] {
+    background: #1f1f3d !important;
+    border: 1px dashed #6d4fd8 !important;
+    border-radius: 14px;
+}
+[data-testid="stFileUploaderDropzone"] * {
+    color: #e5e5ff !important;
+}
+[data-testid="stFileUploaderDropzone"] button {
+    background: #2b2b55 !important;
+    border: 1px solid #6d4fd8 !important;
+    color: #ffffff !important;
+}
+
+/* Buttons */
+.stButton > button {
+    background: #1f1f3d;
+    color: #ffffff;
+    border: 1px solid #6d4fd8;
+    border-radius: 12px;
+    font-weight: 600;
+}
+.stButton > button:hover {
+    border-color: #a78bfa;
+    color: #ffffff;
+}
+.stButton > button[kind="primary"] {
+    background: linear-gradient(90deg, #8b5cf6, #38bdf8);
+    border: none;
+    color: #ffffff;
+}
+.stButton > button:disabled {
+    opacity: 0.45;
+    color: #cfcfe8;
+}
+
+/* Alerts (info / success / error) */
+[data-testid="stAlert"] {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+}
+[data-testid="stAlert"] * {
+    color: #f5f5ff !important;
+}
+
+/* Sources expander */
+[data-testid="stExpander"] {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+}
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] summary * ,
+[data-testid="stExpander"] p {
+    color: #f5f5ff !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -169,10 +342,13 @@ with st.sidebar:
 # ============================================================
 # Main page
 # ============================================================
-st.markdown('<p class="hero-title">AskMyBooks</p>', unsafe_allow_html=True)
+st.markdown('<h1 class="hero-title">📚 <span class="grad">AskMyBooks</span></h1>',
+            unsafe_allow_html=True)
 st.markdown('<p class="hero-sub">Upload your books. Ask anything. Get answers from the pages.</p>',
             unsafe_allow_html=True)
-st.markdown('<p class="hero-by">Built by Shahriar Shoaib</p>', unsafe_allow_html=True)
+st.markdown('<p class="hero-by">Built by <span class="name">Shahriar Shoaib</span></p>',
+            unsafe_allow_html=True)
+st.markdown('<div class="hero-divider"></div>', unsafe_allow_html=True)
 
 if st.session_state.vectorstore is None:
     # No books yet -> show simple instructions
