@@ -41,7 +41,34 @@ html, body, [class*="css"] {
 }
 
 /* Hide default Streamlit chrome */
-#MainMenu, footer, header {visibility: hidden;}
+#MainMenu, footer {visibility: hidden;}
+[data-testid="stToolbar"], [data-testid="stDecoration"] {display: none;}
+
+/* Keep the header, but make it invisible so the sidebar button still works */
+header[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+/* The button that opens the sidebar again */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"] {
+    visibility: visible !important;
+    display: flex !important;
+}
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="collapsedControl"] button,
+[data-testid="stSidebarCollapseButton"] button {
+    color: #ffffff !important;
+    background: #1f1f3d !important;
+    border: 1px solid #6d4fd8 !important;
+    border-radius: 10px !important;
+}
+[data-testid="stSidebarCollapsedControl"] svg,
+[data-testid="collapsedControl"] svg,
+[data-testid="stSidebarCollapseButton"] svg {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
 
 /* ---------- Header ---------- */
 .hero-title {
