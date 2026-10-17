@@ -1,0 +1,3 @@
+[server]
+# Biggest upload allowed, in MB. Keep this the same as MAX_MB in askmybooks.py
+maxUploadSize = 20
