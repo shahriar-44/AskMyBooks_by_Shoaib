@@ -305,6 +305,8 @@ with st.sidebar:
         key=f"uploader_{st.session_state.uploader_key}",
     )
 
+    st.caption(f"📏 Max {MAX_MB} MB per PDF")
+
     already_processed = st.session_state.vectorstore is not None
 
     if st.button("Process Books", type="primary",
