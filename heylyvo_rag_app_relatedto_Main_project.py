@@ -24,7 +24,12 @@ from langchain_core.prompts import ChatPromptTemplate
 MAX_MB = 20
 
 # ---- Page settings (must be the first Streamlit command) ----
-st.set_page_config(page_title="AskMyBooks", page_icon="📚", layout="centered")
+st.set_page_config(
+    page_title="AskMyBooks",
+    page_icon="📚",
+    layout="centered",
+    initial_sidebar_state="expanded",   # sidebar starts open
+)
 
 # ---- Custom styling ----
 st.markdown("""
@@ -42,7 +47,32 @@ html, body, [class*="css"] {
 
 /* Hide default Streamlit chrome */
 #MainMenu, footer {visibility: hidden;}
-[data-testid="stToolbar"], [data-testid="stDecoration"] {display: none;}
+[data-testid="stDecoration"],
+[data-testid="stToolbarActions"],
+[data-testid="stMainMenu"],
+[data-testid="stAppDeployButton"] {display: none !important;}
+
+/* Keep the toolbar itself, because the sidebar open button lives inside it */
+[data-testid="stToolbar"] {
+    visibility: visible !important;
+    display: flex !important;
+    background: transparent !important;
+}
+[data-testid="stExpandSidebarButton"] {
+    visibility: visible !important;
+    display: flex !important;
+}
+[data-testid="stExpandSidebarButton"],
+[data-testid="stExpandSidebarButton"] button {
+    color: #ffffff !important;
+    background: #1f1f3d !important;
+    border: 1px solid #6d4fd8 !important;
+    border-radius: 10px !important;
+}
+[data-testid="stExpandSidebarButton"] svg {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
 
 /* Keep the header, but make it invisible so the sidebar button still works */
 header[data-testid="stHeader"] {
